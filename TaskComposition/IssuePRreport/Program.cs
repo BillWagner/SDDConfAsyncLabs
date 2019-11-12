@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -60,6 +61,7 @@ namespace GitHubActivityReport
             "You must store you GitHub key in the 'GitHubKey' environment variable",
             "");
 
+            Console.WriteLine($"Entering Main. ThreadID = {Thread.CurrentThread.ManagedThreadId}");
             var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("IssueQueryDemo"))
             {
                 Credentials = new Octokit.Credentials(key)
@@ -75,6 +77,7 @@ namespace GitHubActivityReport
             var postBody = issueAndPRQuery.ToJsonText();
             var response = await client.Connection.Post<string>(new Uri("https://api.github.com/graphql"),
                 postBody, "application/json", "application/json");
+            Console.WriteLine($"Got IDs. ThreadID = {Thread.CurrentThread.ManagedThreadId}");
 
             JObject results = JObject.Parse(response.HttpResponse.Body.ToString());
             Console.WriteLine(results);
@@ -86,6 +89,7 @@ namespace GitHubActivityReport
             postBody = issueAndPRQuery.ToJsonText();
             response = await client.Connection.Post<string>(new Uri("https://api.github.com/graphql"),
                 postBody, "application/json", "application/json");
+            Console.WriteLine($"After PRs. ThreadID = {Thread.CurrentThread.ManagedThreadId}");
 
             results = JObject.Parse(response.HttpResponse.Body.ToString());
             Console.WriteLine(results);

@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Octokit;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GitHubActivityReport
 {
@@ -60,46 +62,109 @@ namespace GitHubActivityReport
             "You must store you GitHub key in the 'GitHubKey' environment variable",
             "");
 
-            var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("IssueQueryDemo"))
+            var client = new GitHubClient(new Octokit.ProductHeaderValue("IssueQueryDemo"))
             {
                 Credentials = new Octokit.Credentials(key)
             };
 
             // Next: Run the issue query.
-            var issueAndPRQuery = new GraphQLRequest
-            {
-                Query = Queries.IssueQuery
-            };
-            issueAndPRQuery.Variables["repo_name"] = "docs";
+            await SimpleRunQuery(client);
 
-            var postBody = issueAndPRQuery.ToJsonText();
-            var response = await client.Connection.Post<string>(new Uri("https://api.github.com/graphql"),
-                postBody, "application/json", "application/json");
+            await IssuesThenPRsQuery(client);
 
-            JObject results = JObject.Parse(response.HttpResponse.Body.ToString());
-            Console.WriteLine(results);
-
-            // Find PRs:
-            issueAndPRQuery.Query = Queries.PullRequestQuery;
-            issueAndPRQuery.Variables["repo_name"] = "docs";
-
-            postBody = issueAndPRQuery.ToJsonText();
-            response = await client.Connection.Post<string>(new Uri("https://api.github.com/graphql"),
-                postBody, "application/json", "application/json");
-
-            results = JObject.Parse(response.HttpResponse.Body.ToString());
-            Console.WriteLine(results);
-
-            // TODO as a lab:
-            // 1. Find the latest 50 Open issues in the dotnet/docs repo.
-            // 2. Find the latest 50 in dotnet-api-docs
-            // 3. Do the same for PRs in: dotnet/docs, dotnet/dotnet-api-docs, dotnet/samples
+            await PrintInOrderFinished(client);
 
             Console.ReadLine();
         }
 
+        static async Task SimpleRunQuery(GitHubClient client)
+        {
+            JObject results = await RunQuery(client, Queries.IssueQuery, "docs");
+            Console.WriteLine(results);
+
+            results = await RunQuery(client, Queries.IssueQuery, "dotnet-api-docs");
+            Console.WriteLine(results);
+
+            // Find PRs:
+            results = await RunQuery(client, Queries.PullRequestQuery, "samples");
+            Console.WriteLine(results);
+
+            results = await RunQuery(client, Queries.PullRequestQuery, "dotnet-api-docs");
+            Console.WriteLine(results);
+
+            results = await RunQuery(client, Queries.PullRequestQuery, "docs");
+            Console.WriteLine(results);
+        }
+
+        static async Task IssuesThenPRsQuery(GitHubClient client)
+        {
+            var docsIssueTask =  RunQuery(client, Queries.IssueQuery, "docs");
+
+            var apidocsIssueTask = RunQuery(client, Queries.IssueQuery, "dotnet-api-docs");
+
+            // Find PRs:
+            var samplesPRTask = RunQuery(client, Queries.PullRequestQuery, "samples");
+            var apiDocsPRTask = RunQuery(client, Queries.PullRequestQuery, "dotnet-api-docs");
+            var docsPRTask = RunQuery(client, Queries.PullRequestQuery, "docs");
+
+            writeData(await docsIssueTask);
+            writeData(await apidocsIssueTask);
+            writeData(await samplesPRTask);
+            writeData(await apiDocsPRTask);
+            writeData(await docsPRTask);
+
+            void writeData(JObject data) => Console.WriteLine(data);
+        }
+
+        static async Task PrintInOrderFinished(GitHubClient client)
+        {
+            List<Task<JObject>> queryTasks = new List<Task<JObject>>
+            {
+                RunQuery(client, Queries.IssueQuery, "docs"),
+                RunQuery(client, Queries.IssueQuery, "dotnet-api-docs"),
+                RunQuery(client, Queries.PullRequestQuery, "samples"),
+                RunQuery(client, Queries.PullRequestQuery, "dotnet-api-docs"),
+                RunQuery(client, Queries.PullRequestQuery, "docs")
+            };
+
+            while (queryTasks.Any())
+            {
+                var finished = await Task.WhenAny(queryTasks);
+                writeData(await finished);
+                queryTasks.Remove(finished);
+            }
+
+            void writeData(JObject data) => Console.WriteLine(data);
+        }
+
+        static async Task<JObject> RunQuery(GitHubClient client, string queryText, string repoName)
+        {
+            if (client == null)
+                throw new ArgumentNullException(paramName: nameof(client), "bad null client");
+            if (string.IsNullOrWhiteSpace(queryText))
+                throw new ArgumentNullException();
+            if (string.IsNullOrWhiteSpace(repoName))
+                throw new ArgumentNullException();
+
+            return runQueryImpl();
+
+            async Task<JObject> runQueryImpl()
+            {
+                Query = queryText
+            };
+            issueAndPRQuery.Variables["repo_name"] = repoName;
+
+                var postBody = issueAndPRQuery.ToJsonText();
+                var response = await client.Connection.Post<string>(new Uri("https://api.github.com/graphql"),
+                    postBody, "application/json", "application/json");
+
+                JObject results = JObject.Parse(response.HttpResponse.Body.ToString());
+                return results;
+            }
+        }
+
         static string GetEnvVariable(string item, string error, string defaultValue)
-        {            
+        {
             var value = Environment.GetEnvironmentVariable(item);
             if (string.IsNullOrWhiteSpace(value))
             {

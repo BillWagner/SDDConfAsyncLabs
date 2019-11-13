@@ -23,6 +23,9 @@ In this repository:
   - [C# 7.1](https://docs.microsoft.com/dotnet/csharp/whats-new/csharp-7-1)
   - [C# 7.0](https://docs.microsoft.com/dotnet/csharp/whats-new/csharp-7)
   - [C# 6/0](https://docs.microsoft.com/dotnet/csharp/whats-new/csharp-6)
+- [.NET Core Deployment](https://docs.microsoft.com/dotnet/core/deploying/)
+- [.NET Core versioning](https://docs.microsoft.com/dotnet/core/versions/)
+- [.NET Core Version selection](https://docs.microsoft.com/dotnet/core/versions/selection)
 
 ## Tutorials
 

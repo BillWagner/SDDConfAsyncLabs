@@ -1,0 +1,50 @@
+Summary
+
+DateTime Issue - Don't do date time math
+Functional Program - Lifting and lowering
+Performance Profiler - It's Easy
+Pattern Matching - Great way to simplify
+Garbage Collection Internals
+Debuggin Exercise - Narrowing Steps Down
+Async Streams
+Short hand for null check
+Method Selection Overloads
+NRT - Non Reference Types
+Switch Experessions
+Decimal Data Type
+Generic Type is preferred over converting to the next match
+Immutability
+Benchmark.net
+Async (Outside of Streams)
+Task Yield for Async unit testing
+Exception Handling - Logging with When
+Async Processing - Avoid Task Wait, Result, Ect/returning Void
+Local Functions - Returning Await, Checking Exceptions
+.net Core Self Contained Builds
+POLLY
+Default Interface Methods
+Ref Struct always on the Stack never on the Heap
+Iterators - 
+SPAN
+Records
+editor.config
+Index and Range
+Configure Await
+Kathleen prefers One Line Controllers
+PURITY
+NULLABLE
+Zombie Code - No Dead Code
+Overloads call each other, only one does work
+Smart people make mistakes too
+String interprolator @$ $@
+Diamond problem, DIM
+Result - Having a container for Inputs an Outputs
+Trust ToolBuilder - Let GC do it's thing
+GraphQL
+Compiler decides class for Overloads
+.. for range
+WITH - With-ers
+Progress and Cancellation for IASYNC INUMERABLE
+enable nullable for project; disable for files (existing code)
+NULLABLE Attributes
+

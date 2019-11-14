@@ -1,0 +1,51 @@
+Summary
+
+DateTime Issue - Don't do date time math
+Functional Program - Lifting and lowering
+Performance Profiler - It's Easy!
+Pattern Matching - Great way to simplify
+Garbage Collection Internals
+Debugging Exercise - Narrowing down where the problem is
+Async Streams
+Short hand for null check `_ = arg ?? throw ArgumentNullException(paramName: nameof(arg), message: "arg cnnot be null");`
+Method selection for overloads
+NRT - Non Reference Types
+Switch Expressions
+Decimal Data Type - it's fast enough for most things
+Generic Type is preferred over converting to the next best in overload selection
+Immutability
+Benchmark.net
+Async (Outside of streams, cause that was already said)
+Task Yield for Async unit testing
+Exception Handling - Logging by calling a method in When clause
+Async Processing - Avoid Task.Wait, Task.Result, and other things that block
+Async Processing - Avoid void returning methods (return Task)
+Local Functions - Returning Await, Checking Exceptions See [example on docs](https://docs.microsoft.com/dotnet/csharp/whats-new/csharp-7#local-functions)
+.NET Core Self Contained Builds (that carry .NET Framework as part of the deployment)
+[Polly NuGet package](https://www.nuget.org/packages/Polly)
+Default Interface Methods
+Ref Struct always on the Stack never on the Heap
+Iterators 
+Span
+Records
+editor.config
+Index and Range
+Configure Await
+Kathleen prefers One Line Controller methods (Bill calls them "thin controllers")
+Purity
+Nullable
+Zombie Code - No Dead Code
+As a desirable pattern, design Overloads to call each other, only one does work
+Smart people make mistakes too (Azure crashed on a date math problem)
+String interprolator either @$ or $@ in C# 8.0
+Diamond problem can happen in DIM (Default Interface Methods)
+As a desirable pattern, use a Result class - Have a container for Inputs an Outputs
+Trust ToolBuilder - Let GC do it's thing
+GraphQL
+Compiler decides class for Overloads
+.. for range
+With ( With-ers ) allow a new instance with specific change
+Progress and Cancellation for IAsyncEnumerable
+As a way to introduce, enable nullable for project; disable for files (existing code)
+Nullable Attributes to describe nullable details
+

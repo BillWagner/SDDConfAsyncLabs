@@ -9,6 +9,12 @@ In this repository:
 - Branches are for different lab samples
 - PPTs are in Powerpoint branch
 
+Other repositories:
+
+- Functional sample: [https://github.com/KathleenDollard/sample-class-tracker2.git](https://github.com/KathleenDollard/sample-class-tracker2.git)
+- Puzzles: [https://github.com/KathleenDollard/sample-puzzles.git](https://github.com/KathleenDollard/sample-puzzles.git)
+- Pattern Matching Demo: [https://github.com/KathleenDollard/sample-csharp-8.git](https://github.com/KathleenDollard/sample-csharp-8.git)
+
 ## Interactive samples
 
 - [Interactive samples for C# 7, C# 8, LINQ, other areas](https://github.com/dotnet/try-samples)
